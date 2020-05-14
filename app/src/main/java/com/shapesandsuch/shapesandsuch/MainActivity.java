@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.shapesandsuch.shapesandsuch.shapes.BShape;
@@ -46,6 +48,15 @@ public class MainActivity extends AppCompatActivity{
         currPaint.setColor(Color.RED);
         currPaint.setStyle(Paint.Style.FILL);
 
+        //Initializes shape spinner and populates list
+        String[] shapesList = new String[] {"Circle", "Triangle", "Rectangle", "Square"};
+        Spinner mShapeList = view.findViewById(R.id.shape_list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, shapesList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mShapeList.setAdapter(adapter);
+
+        //Creates add shape button and handles inputs appropriately
         Button mAddBtn = view.findViewById(R.id.add_btn);
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,11 +74,10 @@ public class MainActivity extends AppCompatActivity{
                 shapes.add(s);
                 ++currIndex;
 
-//                highlightCurrentShape(shapes);
                 //Updates canvas view
                 view.invalidate();
 
-                Toast.makeText(v.getContext(), "Index: " + currIndex, Toast.LENGTH_LONG).show();
+//                Toast.makeText(v.getContext(), "Index: " + currIndex, Toast.LENGTH_LONG).show();
             }
         });
     }
