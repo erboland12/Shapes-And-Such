@@ -24,20 +24,17 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity{
     private CanvasView view;
     public static ArrayList<BShape> shapes = new ArrayList<>();
-    private static final String DEBUG_TAG = "Gestures";
-    private GestureDetectorCompat mDetector;
 
-    private int index = 0;
     private int rad = 150;
     private boolean scrolling = false;
 
+    //Variables to keep track of shape values
     public static float currX = 150;
     public static float currY = 150;
-    public int currIndex = -1;
+    public static int currIndex = -1;
     public static String currName = "Circle";
     public static Paint currPaint = new Paint();
 
-    private Button mAddBtn;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +42,28 @@ public class MainActivity extends AppCompatActivity{
         view = new CanvasView(this);
         setContentView(view);
 
+        //Sets default color...for now
         currPaint.setColor(Color.RED);
         currPaint.setStyle(Paint.Style.FILL);
-//        currPaint.setAntiAlias(true);
-//        currPaint.setDither(true);
-        
-        mAddBtn = view.findViewById(R.id.add_btn);
+
+        Button mAddBtn = view.findViewById(R.id.add_btn);
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Creates new shape, adds it to array of shapes, and updates current shape to be the one most recently added
-
                 BShape s = new Circle(rad, currX, currY, currIndex, currName, currPaint);
-//                updateToCurrentShape(shapes);
+                highlightCurrentShape(s);
+                if(shapes.size() > 0){
+                    for(BShape shape: shapes){
+                        if(shape.getIndex() != currIndex){
+                            shape.setPaint(currPaint);
+                        }
+                    }
+                }
                 shapes.add(s);
                 ++currIndex;
 
+//                highlightCurrentShape(shapes);
                 //Updates canvas view
                 view.invalidate();
 
@@ -79,9 +82,6 @@ public class MainActivity extends AppCompatActivity{
                         BShape s = shapes.get(currIndex);
                         s.updateCoordinates(event.getX(), event.getY());
                         view.invalidate();
-//                        Toast.makeText(this, "Coordinates updated: " + event.getX() + ", " + event.getY(),
-//                                        Toast.LENGTH_SHORT).show();
-
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -92,6 +92,21 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(this, "There are no shapes on the canvas.", Toast.LENGTH_SHORT).show();
         }
         return super.onTouchEvent(event);
+    }
+
+    //Helper function that highlights the shape that is currently non-static
+    public static void highlightCurrentShape(BShape shape){
+        if(shape.getIndex() == currIndex){
+            Paint p = new Paint();
+            p.setColor(Color.GREEN);
+            p.setStyle(Paint.Style.FILL);
+
+            shape.setPaint(p);
+        }
+        else{
+            shape.setPaint(currPaint);
+        }
+
     }
 }
 
