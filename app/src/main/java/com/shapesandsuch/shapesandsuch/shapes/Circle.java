@@ -90,7 +90,7 @@ public class Circle extends BShape{
     }
 
     @Override
-    public void draw(Canvas c, float x, float y, Paint p) {
+    public void draw(Canvas c, int x, int y, Paint p) {
         c.drawCircle(x, y, this.getRadius(), p);
     }
 

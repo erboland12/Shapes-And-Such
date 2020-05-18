@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.shapesandsuch.shapesandsuch.shapes.BShape;
 import com.shapesandsuch.shapesandsuch.shapes.CanvasView;
 import com.shapesandsuch.shapesandsuch.shapes.Circle;
+import com.shapesandsuch.shapesandsuch.shapes.EmptyShape;
+import com.shapesandsuch.shapesandsuch.shapes.Triangle;
 
 import java.util.ArrayList;
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
 
         //Initializes shape spinner and populates list
         String[] shapesList = new String[] {"Circle", "Triangle", "Rectangle", "Square"};
-        Spinner mShapeList = view.findViewById(R.id.shape_list);
+        final Spinner mShapeList = view.findViewById(R.id.shape_list);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, shapesList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -62,7 +64,20 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 //Creates new shape, adds it to array of shapes, and updates current shape to be the one most recently added
-                BShape s = new Circle(rad, currX, currY, currIndex, currName, currPaint);
+                String typeOfShape = mShapeList.getSelectedItem().toString();
+                BShape s = new EmptyShape();
+
+                //Switch statement to check what type of shape is being added
+                switch(typeOfShape){
+                    case "Triangle":
+                        s = new Triangle(currX, currY, 350, 400, false, currIndex, currName, currPaint, 0);
+                        break;
+                    case "Circle":
+                        s = new Circle(rad, currX, currY, currIndex, currName, currPaint);
+                        break;
+                }
+
+                //Highlights current non-static shape and checks for colors of shapes array
                 highlightCurrentShape(s);
                 if(shapes.size() > 0){
                     for(BShape shape: shapes){
@@ -77,7 +92,18 @@ public class MainActivity extends AppCompatActivity{
                 //Updates canvas view
                 view.invalidate();
 
-//                Toast.makeText(v.getContext(), "Index: " + currIndex, Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), "Index: " + currIndex, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Button mRotateButton = findViewById(R.id.rotate_btn);
+        mRotateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BShape s = shapes.get(currIndex);
+                s.rotate();
+                Toast.makeText(v.getContext(), "Rotated " + s.defaultName(), Toast.LENGTH_SHORT).show();
+                view.invalidate();
             }
         });
     }

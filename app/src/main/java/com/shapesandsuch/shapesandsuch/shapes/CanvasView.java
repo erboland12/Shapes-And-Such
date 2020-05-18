@@ -47,7 +47,7 @@ public class CanvasView extends FrameLayout {
         paint.setColor(Color.parseColor("#da4747"));
 
         for(BShape shape: MainActivity.shapes){
-            shape.draw(canvas, shape.getX(), shape.getY(), shape.getPaint());
+            shape.draw(canvas, (int) shape.getX(), (int) shape.getY(), shape.getPaint());
         }
 
     }

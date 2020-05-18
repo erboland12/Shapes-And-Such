@@ -22,7 +22,7 @@ public abstract class BShape {
 
     public abstract void rotate();
     public abstract void updateCoordinates(float newX, float newY);
-    public abstract void draw(Canvas c, float x, float y, Paint p);
+    public abstract void draw(Canvas c, int x, int y, Paint p);
 
     public abstract String defaultName();
 }
